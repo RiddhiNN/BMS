@@ -5,7 +5,7 @@ session_start();
    die("connection failed :" .mysql_error());
  }
 
- $username = $email = $psw1 = $psw2 = "";
+ $username = $email = $psw1 = $psw2 = $firstname = $lastname = $mobile = "";
  $errors = array();
 
 if (isset($_POST['register']))
@@ -61,7 +61,7 @@ if (isset($_POST['register']))
   array_push( $errors, "Mobile number is required.");
   } else
   {
-    $lastname = mysqli_real_escape_string($db, $_POST["mobile"]);
+    $mobile = mysqli_real_escape_string($db, $_POST["mobile"]);
   }
 
   if (empty($_POST["psw1"])) {
