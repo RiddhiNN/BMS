@@ -30,7 +30,7 @@ if (isset($_POST['register']))
   array_push( $errors, "Email is required.");
   } else
   {
-     if(!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $_POST["email"]))
+     if(!filter_var(trim($_POST["email"]), FILTER_VALIDATE_EMAIL))
      {
       array_push( $errors, "The Email you have entered is invalid, try again.") ;
      }
