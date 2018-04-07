@@ -38,7 +38,7 @@
 
     <div class="input">
     <label>Email</label><br>
-    <input type="text" placeholder="Enter email" name="email">
+    <input type="email" placeholder="Enter email" name="email">
     </div>
 
     <div class="input">
