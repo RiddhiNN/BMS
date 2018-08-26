@@ -1,11 +1,11 @@
 <?php
 session_start();
- $db = mysqli_connect('localhost','BMS','bookmyseat','BMS');
+ $db = mysqli_connect('localhost','root','','bms1');
  if (!$db) {
    die("connection failed :" .mysql_error());
  }
 
- $username = $email = $psw1 = $psw2 = "";
+ $username = $email = $psw1 = $psw2 = $firstname = $lastname = $mobile = "";
  $errors = array();
 
 if (isset($_POST['register']))
@@ -17,7 +17,7 @@ if (isset($_POST['register']))
   else
   {
     $username = mysqli_real_escape_string($db, $_POST["username"]);
-    $sql = "SELECT * FROM `users` WHERE `user_name` = $username ";
+    $sql = "SELECT * FROM `users` WHERE `user_name` = '$username' ";
      $res = mysqli_query($db, $sql);
      if((mysqli_num_rows($res))>0)
      {
@@ -30,7 +30,13 @@ if (isset($_POST['register']))
   array_push( $errors, "Email is required.");
   } else
   {
-    $email = mysqli_real_escape_string($db, $_POST["email"]);
+     if(!filter_var(trim($_POST["email"]), FILTER_VALIDATE_EMAIL))
+     {
+      array_push( $errors, "The Email you have entered is invalid, try again.") ;
+     }
+     else{
+      $email = mysqli_real_escape_string($db, $_POST["email"]);
+    }
   }
 
   if (empty($_POST["firstname"]))
@@ -55,7 +61,7 @@ if (isset($_POST['register']))
   array_push( $errors, "Mobile number is required.");
   } else
   {
-    $lastname = mysqli_real_escape_string($db, $_POST["mobile"]);
+    $mobile = mysqli_real_escape_string($db, $_POST["mobile"]);
   }
 
   if (empty($_POST["psw1"])) {
@@ -72,7 +78,7 @@ if (isset($_POST['register']))
     if(count($errors)==0)
     {
      $psw = md5($psw1);
-     $sql = "INSERT INTO `users` (`user_id`, `user_name`, `first_name`, `last_name`, `mobile`, `email`, `password`, `reward_pts`) VALUES (NULL, '$username', '$firstname', '$lastname', '$mobile', '$email', '$psw1', 0);";
+     $sql = "INSERT INTO `users` (`user_id`, `user_name`, `first_name`, `last_name`, `mobile`, `email`, `password`, `reward_pts`) VALUES (NULL, '$username', '$firstname', '$lastname', '$mobile', '$email', '$psw', 0) ";
     mysqli_query($db, $sql);
     header('location: home1.php');
     }
@@ -95,12 +101,17 @@ if (isset($_POST['login']))
       if(count($errors)==0)
     {
      $psw = md5($psw1);
-     $sql = "SELECT * FROM `users` WHERE `user_name` = '$username' AND `password` = '$psw1'";
+     $sql = "SELECT * FROM `users` WHERE `user_name` = '$username' AND `password` = '$psw'";
      $res = mysqli_query($db, $sql);
      if((mysqli_num_rows($res)) > 0)
      {
-       $_SESSION['Name'] = $username;
-       header('location:home1.php');
+
+       while($row = $res->fetch_assoc()) {
+         $_SESSION['Name']=$row["user_name"];
+         $_SESSION['id_user']=$row["user_id"];
+    }
+
+      header('location: home1.php');
      } else
      {
       array_push( $errors, "Combination of username and password is wrong.");
@@ -111,6 +122,7 @@ if (isset($_POST['login']))
 if (isset($_GET['logout'])) {
   session_destroy();
   unset($_SESSION['Name']);
+  unset($_SESSION['id_user']);
   header('location: login.php');
 
 }

@@ -2,12 +2,22 @@
 if (empty($_SESSION['Name'])) {
   header('location: login.php');
 }
-
-
 ?>
+
+<?php
+//session_start();
+$dbServername="localhost";
+$dbUsername="root";
+$dbPass="";
+$dbName="bms1";
+ $db3 = mysqli_connect($dbServername, $dbUsername, $dbPass, $dbName);
+ if (!$db3) {
+   die("connection failed :" .mysql_error());
+ }
+ ?>
 <!DOCTYPE html>
 <html>
-<title>contacts page</title>
+<title>reward direct page</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -28,7 +38,7 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
 <!-- Icon Bar (Sidebar - hidden on small screens) -->
 <nav class="w3-sidebar w3-bar-block w3-small w3-hide-small w3-center">
   <!-- Avatar image in top left corner -->
-  <img src="pic1.jpg" style="width:100%">
+   <img src="pic1.jpg" style="width:100%">
   
   <a href="home_give.php" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
     <i class="fa fa-envelope w3-xxlarge"></i>
@@ -47,7 +57,7 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
     <p>CONTACT</p>
   </a>
   <?php if (isset($_SESSION['Name'])): ?>
-   <a href="contacts.php?logout='1'" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+   <a href="home_accept1.php?logout='1'" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
     <i class="fa fa-envelope w3-xxlarge"></i>
     <p>LOG OUT</p>
     </a>
@@ -62,7 +72,7 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
     <a href="reward_direct.php" class="w3-bar-item w3-button" style="width:25% !important">REWARD POINTS</a>
     <a href="contacts.php" class="w3-bar-item w3-button" style="width:25% !important">CONTACT</a>
     <?php if (isset($_SESSION['Name'])): ?>
-    <a href="contacts.php?logout='1'" class="w3-bar-item w3-button" style="width:25% !important">LOG OUT</a>
+    <a href="home_accept1.php?logout='1'" class="w3-bar-item w3-button" style="width:25% !important">LOG OUT</a>
     <?php endif ?>
   </div>
 </div>
@@ -83,37 +93,49 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
     </h3>
   </header>
 
-  
     
- <!-- Contact Section -->
+
+  <!-- INFO Section -->
   <div class="w3-padding-64 w3-content w3-text-grey" id="contact">
-    <h2 class="w3-text-light-grey">Contact Us</h2>
+    <h2 class="w3-text-light-grey">REWARD POINTS:</h2>
     <hr style="width:200px" class="w3-opacity">
 
-    <div class="w3-section">
-      <p><i class="fa fa-map-marker fa-fw w3-text-white w3-xxlarge w3-margin-right"></i> VJTI, Mumbai</p>
-      <p><i class="fa fa-phone fa-fw w3-text-white w3-xxlarge w3-margin-right"></i> Phone: +00 151515</p>
-      <p><i class="fa fa-envelope fa-fw w3-text-white w3-xxlarge w3-margin-right"> </i> Email: railwebsite@mail.com</p>
-    </div><br>
-    <p>Lets get in touch. Send us a message:</p>
-
-    <form action="/action_page.php" target="_blank">
-      <p><input class="w3-input w3-padding-16" type="text" placeholder="Name" required name="Name"></p>
-      <p><input class="w3-input w3-padding-16" type="text" placeholder="Email" required name="Email"></p>
-      <p><input class="w3-input w3-padding-16" type="text" placeholder="Subject" required name="Subject"></p>
-      <p><input class="w3-input w3-padding-16" type="text" placeholder="Message" required name="Message"></p>
-      <p>
-        <button class="w3-button w3-light-grey w3-padding-large" type="submit">
-          <i class="fa fa-paper-plane"></i> SEND MESSAGE
-        </button>
-      </p>
-    </form>
-  <!-- End Contact Section -->
-  </div>
     
+  </div>
+  <div>
+      
+     
+    <?php
+     $id = $_SESSION['id_user'];   
+      $sql7 = "SELECT * FROM `users` WHERE `user_id`='$id'";
+      $res7 = mysqli_query($db3, $sql7);
+      //$stn_id = 0;
+      if((mysqli_num_rows($res7)) > 0)
+      {
+
+        while($row7 = $res7->fetch_assoc()) {
+          $rpts=$row7["reward_pts"];
+     
+        }
+        }
+
+        echo "YOUR REWARD POINTS ARE: ".$rpts;
+
+
+
+
+    ?>
   
   
-    <!-- Footer -->
+   </div>
+  <div>
+
+  
+  
+  
+</div>
+
+ <!-- Footer -->
   <footer class="w3-content w3-padding-64 w3-text-grey w3-xlarge">
     <i class="fa fa-facebook-official w3-hover-opacity"></i>
     <i class="fa fa-instagram w3-hover-opacity"></i>
@@ -124,9 +146,6 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
     <p class="w3-medium">Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank" class="w3-hover-text-green">VJTI-Computer-Department</a></p>
   <!-- End footer -->
   </footer>
-
-<!-- END PAGE CONTENT -->
-</div>
 
 </body>
 </html>
